@@ -184,7 +184,8 @@ def exp_init(amount_of_bots, amount_of_food, matrix_width, matrix_height):
 # By using this you can change parameters and start experiment
 
 
-def main(stage, matrix_width, matrix_height, k, food_list, list_of_bots, amount_of_surv, run=True):
+def main(stage, matrix_width, matrix_height, k, food_list, list_of_bots, amount_of_new_bots, amount_of_survived,
+         default=False):
 
     # for start it needs:
     # matrix sizes
@@ -199,6 +200,10 @@ def main(stage, matrix_width, matrix_height, k, food_list, list_of_bots, amount_
     matrix = matrix_init(matrix_width, matrix_height)
     i = 0
 
+    if default:
+        new_world = re_moves(list_of_bots, amount_of_new_bots)
+
+    run = True
     # run indicates should experiment go or not
     # it could be False if you want
     while run:
@@ -237,6 +242,10 @@ def main(stage, matrix_width, matrix_height, k, food_list, list_of_bots, amount_
             if bots.health_points <= 0:
                 matrix[bots.x][bots.y] = 0
                 del list_of_bots[bots_counter]
+
+            # when amount of bots decrease to minimum experiment ends
+            if len(list_of_bots) == amount_of_survived:
+                run = False
 
             else:
 
@@ -309,6 +318,5 @@ for i in range(10):
         stage_counter += 1
     else:
         generation = exp_init(40, 40, 100, 100)
-        new_gen = main(stage_counter, 100, 100, 10, generation[1], new_gen, 5)
+        new_gen = main(stage_counter, 100, 100, 10, generation[1], new_gen, 5, default=True)
         stage_counter += 1
-    print(new_gen)
